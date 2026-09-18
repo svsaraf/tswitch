@@ -1,0 +1,19 @@
+pyproject.toml
+  s_e8274304e241de::t_66a438a6efb16b 30-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "5421b7d4cf06600b6650dfabcf6e1a19ac8f1e08",
+  "prompts": {},
+  "sessions": {
+    "s_e8274304e241de": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f498039d4ffe5nYzV0dUC6Jeid",
+        "model": "accounts/fireworks/models/glm-5p3"
+      },
+      "human_author": "Sanjay Saraf <sanjay@luminai.com>"
+    }
+  }
+}
