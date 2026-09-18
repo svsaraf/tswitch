@@ -2,6 +2,10 @@
 
 Typesafe `switch`, `score`, and `bool` primitives for Python, powered by [TypeSafe AI](https://typesafe.ai).
 
+`tswitch` picks one of your named cases, `tscore` measures something along levels you
+define, and `tbool` answers a yes/no question. Each one returns a plain Python value —
+a string, a number, or a boolean — never generated prose you have to parse.
+
 ## Installation
 
 ```bash
@@ -16,6 +20,8 @@ export TYPESAFE_API_KEY=apikey_...
 
 ## Quickstart
 
+`tswitch` looks at your value and returns the name of the case that matches:
+
 ```python
 from tswitch import tswitch
 
@@ -24,32 +30,42 @@ tone = tswitch(
     calm="Polite, measured, or friendly language.",
     angry="Hostile, frustrated, or expletive language.",
 )
-# tone == "angry"
+print(tone)
 ```
 
-Dispatch on structured state, then map case names to results:
+```
+angry
+```
+
+`tswitch` can only answer with one of the case names you gave it, so the result is
+always `"calm"` or `"angry"` — never anything else. Use it like a `switch` statement:
 
 ```python
 from tswitch import tswitch
 
-ticket = {"subject": "Refund please", "body": "You billed me twice this month."}
+email = "Hi! You billed me twice this month. Please fix it."
 
-route = {
-    "billing": ["billing-team@example.com", "P1"],
-    "general": ["support@example.com", "P3"],
-}[
-    tswitch(
-        ticket,
-        billing="Problems with charges, invoices, refunds, or subscriptions.",
-        general="Anything else.",
-    )
-]
+team = tswitch(
+    email,
+    billing="Problems with charges, invoices, refunds, or subscriptions.",
+    general="Anything else.",
+)
+print(team)
+
+if team == "billing":
+    send_to("billing-team@example.com")
+else:
+    send_to("support@example.com")
+```
+
+```
+billing
 ```
 
 ## Score a value on a spectrum
 
-`tscore` returns a float position along your ordered levels — it can fall between
-two of them, so it maps onto a threshold:
+`tscore` returns a number: `0` for the first level you listed, `1` for the second,
+`2` for the third, and so on. It can also land between two levels, like `1.8`:
 
 ```python
 from tswitch import tscore
@@ -57,88 +73,155 @@ from tswitch import tscore
 frustration = tscore(
     "I was charged twice and I am furious!",
     "How frustrated does the customer appear?",
-    ["Calm and neutral.", "Concerned but civil.", "Very angry or using strong language."],
+    ["Calm and neutral.", "Concerned but civil.", "Very angry."],
 )
+print(frustration)
+```
+
+```
+1.8
+```
+
+Here `0` means calm, `1` means concerned, and `2` means very angry — `1.8` means
+"somewhere between concerned and very angry, closer to angry". That makes it easy to
+act on with a plain comparison:
+
+```python
 if frustration >= 2:
     escalate_to_human()
 ```
 
-## Judge a yes/no statement
+## Answer a yes/no question
 
-`tbool` returns `True` when the probability that your statement is true is at or
-above `threshold` (default `0.5`), so it maps onto an `if`:
+`tbool` returns `True` or `False`:
 
 ```python
 from tswitch import tbool
 
-if tbool(
-    "I was charged twice. Please refund the duplicate.",
-    "Does the customer request a refund?",
-    true="The customer wants money returned.",
-    false="The customer is asking for information only.",
-):
-    issue_refund()
+refund = tbool(
+    "You charged me twice this month. Please refund the extra charge.",
+    "Does the customer ask for a refund?",
+)
+print(refund)
 ```
 
-Phrase the statement so it is clearly true or false. If you want to measure a
-level of something ("how strong is this candidate in Python?"), use `tscore`
-with defined levels instead.
+```
+True
+```
+
+Write the statement so it is clearly true or false — "Does the customer ask for a
+refund?" is a good statement; "What does the customer want?" is not (that's a job for
+`tswitch`). If you want to measure *how much* of something there is ("how frustrated
+is the customer?"), use `tscore` with levels instead.
+
+You can optionally describe what a yes and a no look like, and the answer is `True`
+when the probability of yes is at or above `threshold` (default `0.5`):
+
+```python
+from tswitch import tbool
+
+refund = tbool(
+    "You charged me twice this month. Please refund the extra charge.",
+    "Does the customer ask for a refund?",
+    true="The customer wants money returned.",
+    false="The customer is asking for information only.",
+)
+print(refund)
+```
+
+```
+True
+```
 
 ## The value
 
-The value may be text, a JSON-like dict or list (nested non-JSON objects are described
-by their `repr`), or any other Python object, which is described by its `repr`:
+The value can be a string, a dictionary, a list, or any Python object. Dictionaries
+and lists are sent as they are; anything the API can't read (like a date) is described
+by its `repr`:
 
 ```python
 import datetime
 
-tswitch(
-    {"at": datetime.datetime(2026, 1, 1, 3, 0), "text": "URGENT: site is down"},
+from tswitch import tswitch
+
+result = tswitch(
+    {"when": datetime.datetime(2026, 1, 1, 3, 0), "text": "URGENT: site is down"},
     urgent="Reports of outages or unavailable services.",
     routine="Ordinary questions or feature requests.",
 )
+print(result)
+```
+
+```
+urgent
 ```
 
 ## Case descriptions
 
-Each case is keyed by its name and valued by a description of what matches — a string,
-JSON-like content, or `None` for an undescribed label:
+Each case is keyed by its name and valued by a description of what matches. A string
+is the most common choice, and `None` means "no description":
 
 ```python
-tswitch(
+from tswitch import tswitch
+
+result = tswitch(
     "The plot dragged in the second act.",
     plot="Concerns about storyline or pacing.",
     cast="Concerns about acting or characters.",
     effects=None,
 )
+print(result)
 ```
 
-Descriptions don't have to be strings — any JSON-like value works, and non-JSON
-objects are described by their `repr`:
+```
+plot
+```
+
+Descriptions don't have to be strings — dictionaries, lists, and tuples work too, and
+any other object is described by its `repr`:
 
 ```python
-bugs = tswitch(
+from tswitch import tswitch
+
+result = tswitch(
     {"error": "TypeError: 'NoneType' object is not iterable", "version": "1.4.2"},
     crash={"matches": "failures that stop the program", "signals": ["traceback", "exit code"]},
     cosmetic=("visual problems", "layout issues"),
     other=object(),  # described by repr(object())
 )
+print(result)
 ```
 
-Cases are keyword arguments, so names with dashes or spaces are unpacked from a dict:
+```
+crash
+```
+
+Cases are keyword arguments, so names with dashes or spaces are unpacked from a
+dictionary:
 
 ```python
-tswitch(
+from tswitch import tswitch
+
+result = tswitch(
     "The plot dragged in the second act.",
     **{"slow-burn": "Deliberate, gradual pacing.", "messy": "Confused or erratic pacing."},
 )
+print(result)
+```
+
+```
+slow-burn
 ```
 
 ## Async
 
+Every function has an async twin: `atswitch`, `atscore`, and `atbool`. They work the
+same way, but you `await` them:
+
 ```python
 import asyncio
-from tswitch import atswitch, atscore, atbool
+
+from tswitch import atswitch
 
 async def main():
     tone = await atswitch(
@@ -146,18 +229,14 @@ async def main():
         calm="Polite, measured, or friendly language.",
         angry="Hostile, frustrated, or expletive language.",
     )
-    frustration = await atscore(
-        "Thanks, that solved it!",
-        "How frustrated does the customer appear?",
-        ["Calm and neutral.", "Concerned but civil.", "Very angry."],
-    )
-    friendly = await atbool(tone, f"Is {tone!r} friendly language?")
-    print(tone, frustration, friendly)
+    print(tone)
 
 asyncio.run(main())
 ```
 
-Every function has an async twin: `atswitch`, `atscore`, and `atbool`.
+```
+calm
+```
 
 ## API
 
