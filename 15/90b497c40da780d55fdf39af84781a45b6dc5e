@@ -1,0 +1,23 @@
+src/tswitch/__init__.py
+  s_e8274304e241de::t_0736b8b551a381 15
+pyproject.toml
+  s_e8274304e241de::t_738349c054a5bf 7
+.github/workflows/release.yml
+  s_e8274304e241de::t_c90f2d160a76db 1-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "1590b497c40da780d55fdf39af84781a45b6dc5e",
+  "prompts": {},
+  "sessions": {
+    "s_e8274304e241de": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f498039d4ffe5nYzV0dUC6Jeid",
+        "model": "accounts/fireworks/models/glm-5p3"
+      },
+      "human_author": "Sanjay Saraf <sanjay@luminai.com>"
+    }
+  }
+}
