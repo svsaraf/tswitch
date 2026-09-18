@@ -1,0 +1,19 @@
+README.md
+  s_e8274304e241de::t_b3bc80d4b687f0 5-8,23-24,33-37,40-41,46,48-62,67-68,76,78-89,94-115,117-118,123-125,128-129,132-134,138-140,145-148,152-156,161-162,165-167,173,176-181,184-186,192,195-200,203-205,209-213,218-220,223-224,232,237-239
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "55fcad00a50db74b0b6fa72ddbeb3d5f56f5a5fe",
+  "prompts": {},
+  "sessions": {
+    "s_e8274304e241de": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_f498039d4ffe5nYzV0dUC6Jeid",
+        "model": "accounts/fireworks/models/glm-5p3"
+      },
+      "human_author": "Sanjay Saraf <sanjay@luminai.com>"
+    }
+  }
+}
