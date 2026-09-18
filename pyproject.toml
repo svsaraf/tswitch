@@ -27,6 +27,12 @@ dependencies = [
     "typesafe-sdk>=0.7.0,<0.8",
 ]
 
+[project.urls]
+Homepage = "https://github.com/svsaraf/tswitch"
+Repository = "https://github.com/svsaraf/tswitch"
+Issues = "https://github.com/svsaraf/tswitch/issues"
+PyPI = "https://pypi.org/project/tswitch/"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
