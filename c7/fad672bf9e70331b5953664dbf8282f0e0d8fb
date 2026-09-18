@@ -1,0 +1,32 @@
+.gitignore
+  h_571bbe10eeec3c 1-11
+LICENSE
+  h_571bbe10eeec3c 1-21
+README.md
+  h_571bbe10eeec3c 1-203
+pyproject.toml
+  h_571bbe10eeec3c 1-39
+src/tswitch/__init__.py
+  h_571bbe10eeec3c 1-15
+src/tswitch/_core.py
+  h_571bbe10eeec3c 1-68
+src/tswitch/noul.py
+  h_571bbe10eeec3c 1-117
+src/tswitch/score.py
+  h_571bbe10eeec3c 1-105
+src/tswitch/switch.py
+  h_571bbe10eeec3c 1-100
+tests/test_switch.py
+  h_571bbe10eeec3c 1-267
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "c7fad672bf9e70331b5953664dbf8282f0e0d8fb",
+  "prompts": {},
+  "humans": {
+    "h_571bbe10eeec3c": {
+      "author": "Sanjay Saraf <sanjay@luminai.com>"
+    }
+  }
+}
