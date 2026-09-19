@@ -2,9 +2,9 @@
 
 Typesafe `switch`, `score`, and `bool` primitives for Python, powered by [TypeSafe AI](https://typesafe.ai).
 
-`tswitch` picks one of your named cases, `tscore` measures something along levels you
-define, and `tbool` answers a yes/no question. Each one returns a plain Python value —
-a string, a number, or a boolean — never generated prose you have to parse.
+`tswitch` is a smart version of a switch statement
+`tscore` is a smart version of a score
+`tbool` returns true if something is correct
 
 ## Installation
 
@@ -108,11 +108,6 @@ print(refund)
 ```
 True
 ```
-
-Write the statement so it is clearly true or false — "Does the customer ask for a
-refund?" is a good statement; "What does the customer want?" is not (that's a job for
-`tswitch`). If you want to measure *how much* of something there is ("how frustrated
-is the customer?"), use `tscore` with levels instead.
 
 You can optionally describe what a yes and a no look like, and the answer is `True`
 when the probability of yes is at or above `threshold` (default `0.5`):
@@ -240,24 +235,24 @@ calm
 
 ## API
 
-### `tswitch(value, /, *, model=None, api_key=None, client=None, **cases)` → `str`
+#### `tswitch(value, /, *, model=None, api_key=None, client=None, **cases)` → `str`
 
 Returns the name of the case matching `value`. Raises `ValueError` if no cases are
 supplied, and `TypeSafeError` if no API key is available.
 
-### `tscore(value, instructions, levels, /, *, model=None, api_key=None, client=None)` → `float`
+#### `tscore(value, instructions, levels, /, *, model=None, api_key=None, client=None)` → `float`
 
 Returns the score of `value` along the ordered `levels`, from `0` to
 `len(levels) - 1`; it can fall between two levels. Raises `ValueError` if `levels`
 is empty.
 
-### `tbool(value, instructions, /, *, true=None, false=None, threshold=0.5, model=None, api_key=None, client=None)` → `bool`
+#### `tbool(value, instructions, /, *, true=None, false=None, threshold=0.5, model=None, api_key=None, client=None)` → `bool`
 
 Returns whether `instructions` is true of `value`, using the optional `true`/`false`
 outcome descriptions and requiring a probability of yes at or above `threshold`.
 Raises `ValueError` if `threshold` is outside `[0, 1]`.
 
-### `atswitch`, `atscore`, `atbool`
+#### `atswitch`, `atscore`, `atbool`
 
 The async variants of the functions above, with identical signatures and results.
 
